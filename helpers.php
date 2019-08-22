@@ -142,3 +142,22 @@ function include_template($name, array $data = []) {
 
     return $result;
 }
+
+/**
+ * Подсчитывает число задач в категории
+ * @param array $tasks_list_array Ассоциативный массив с задачами
+ * @param string $category Название категории
+ * @return int Число задач в категории
+ */
+function getProjectCount($tasks_list_array, $category) 
+{
+    $cat_count = 0;
+    if (is_array($tasks_list_array)) {
+        foreach ($tasks_list_array as $item) {
+            if (isset($item["category"]) && $item["category"] === $category) {
+                $cat_count++;
+            }
+        }
+    }
+    return $cat_count;
+}
