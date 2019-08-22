@@ -43,6 +43,18 @@ $tasks_list = [
     ]
 ];
 
+function getProjectCount($tasks_list_array, $category) {
+    $cat_count = 0;
+    if (is_array($tasks_list_array)) {
+        foreach ($tasks_list_array as $item) {
+            if (isset($item["category"]) && $item["category"] === $category) {
+                $cat_count++;
+            }
+        }
+    }
+    return $cat_count;
+}
+
 ?>
 <!DOCTYPE html>
 <html lang="ru">
@@ -87,7 +99,7 @@ $tasks_list = [
                         <?php foreach ($projects as $project) : ?>
                         <li class="main-navigation__list-item">
                             <a class="main-navigation__list-item-link" href="#"><?= $project; ?></a>
-                            <span class="main-navigation__list-item-count">0</span>
+                            <span class="main-navigation__list-item-count"><?= getProjectCount($tasks_list, $project); ?></span>
                         </li>
                         <?php endforeach; ?>
                     </ul>
