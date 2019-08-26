@@ -161,3 +161,19 @@ function getProjectCount($tasks_list_array, $category)
     }
     return $cat_count;
 }
+
+/**
+ * Определяет меньше ли 24-х часов осталось до даты
+ * @param string $time_str Интересуемая дата
+ * @return bool true если до даты менее 24-х часов, иначе false
+ */
+function isLessThan24($time_str) 
+{
+    if ($dt = strtotime($time_str)) {
+        $diff = $dt - time();
+        if ($diff <= 86400) {
+            return true;
+        }
+    }
+    return false;
+}

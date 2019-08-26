@@ -44,7 +44,9 @@
         <?php foreach ($tasks_list as $tasks_list_item) : 
             if ($tasks_list_item["is_complete"] && ($show_complete_tasks === 0)) { continue; }
         ?>
-        <tr class="tasks__item task <?php if ($tasks_list_item["is_complete"]) { print("task--completed"); } ?>">
+        <tr class="tasks__item task <?php if ($tasks_list_item["is_complete"]) { print("task--completed"); } 
+            if (isLessThan24($tasks_list_item["date"])) { print("task--important"); }
+        ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">

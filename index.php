@@ -1,5 +1,6 @@
 <?php
 
+require_once "config.php";
 require_once "helpers.php";
 
 // показывать или нет выполненные задачи
@@ -36,7 +37,7 @@ $tasks_list = [
     ],
     [
         "task" => "Купить корм для кота",
-        "date" => null,
+        "date" => "28.08.2019",
         "category" => "Домашние дела",
         "is_complete" => false
     ],
