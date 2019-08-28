@@ -6,8 +6,8 @@ USE doingsdone;
 
 CREATE TABLE projects (
   id INT AUTO_INCREMENT PRIMARY KEY,
-  title CHAR(64) UNIQUE NOT NULL,
-  author INT NOT NULL
+  title CHAR(64) NOT NULL,
+  author_id INT NOT NULL
 );
 
 CREATE TABLE tasks (
@@ -16,7 +16,7 @@ CREATE TABLE tasks (
   status TINYINT(1) DEFAULT 0,
   task_title CHAR(128) NOT NULL,
   file_path CHAR(128),
-  task_expiration TIMESTAMP NOT NULL,
+  task_expiration TIMESTAMP DEFAULT NULL,
   author_id INT NOT NULL,
   project_id INT NOT NULL
 );
