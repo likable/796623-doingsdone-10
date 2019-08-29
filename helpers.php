@@ -177,3 +177,17 @@ function isLessThan24($time_str)
     }
     return false;
 }
+
+/**
+ * Переводит дату из формата YYYY-MM-DD HH:MM:SS в формат DD.MM.YYYY
+ * @param string $timestamp дата в формате таймстэмпа
+ * @return string дата в формате DD.MM.YYYY
+ */
+function timestampToNormal($timestamp) 
+{
+    $output = "";
+    if ($unix = strtotime($timestamp)) {
+        $output = date("d.m.Y", $unix);
+    }
+    return $output;
+}
