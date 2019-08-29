@@ -8,46 +8,36 @@ $show_complete_tasks = rand(0, 1);
 
 $title = "Дела в порядке";
 
-$projects = ["Входящие", "Учеба", "Работа", "Домашние дела", "Авто"];
+$user_name = "Виталий";
+$user_id = 2;
+$projects = [];
+$tasks_list = [];
 
-$tasks_list = [
-    [
-        "task" => "Собеседование в IT компании",
-        "date" => "01.12.2019",
-        "category" => "Работа",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Выполнить тестовое задание",
-        "date" => "25.12.2019",
-        "category" => "Работа",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Сделать задание первого раздела",
-        "date" => "21.12.2019",
-        "category" => "Учеба",
-        "is_complete" => true
-    ],
-    [
-        "task" => "Встреча с другом",
-        "date" => "22.12.2019",
-        "category" => "Входящие",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Купить корм для кота",
-        "date" => "28.08.2019",
-        "category" => "Домашние дела",
-        "is_complete" => false
-    ],
-    [
-        "task" => "Заказать пиццу",
-        "date" => null,
-        "category" => "Домашние дела",
-        "is_complete" => false
-    ]
-];
+$connect = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+
+if ($connect == false) {
+    print("Ошибка подключения к базе данных");
+} else {
+    mysqli_set_charset($connect, "utf8");
+    
+    $query_projects = "SELECT title FROM projects WHERE author_id = ?";
+    $stmt_projects = db_get_prepare_stmt($connect, $query_projects, [$user_id]);
+    mysqli_stmt_execute($stmt_projects);
+    $stmt_projects_result = mysqli_stmt_get_result($stmt_projects);
+    $db_projects = mysqli_fetch_all($stmt_projects_result, MYSQLI_ASSOC);
+
+    foreach($db_projects as $db_project) {
+        $projects[] = $db_project["title"];
+    }
+    
+    $query_tasks = "SELECT status, task_title, file_path, task_expiration, "
+            . "title AS category FROM tasks t LEFT JOIN projects p "
+            . "ON project_id = p.id WHERE t.author_id = ?";
+    $stmt_tasks = db_get_prepare_stmt($connect, $query_tasks, [$user_id]);
+    mysqli_stmt_execute($stmt_tasks);
+    $stmt_tasks_result = mysqli_stmt_get_result($stmt_tasks);
+    $tasks_list = mysqli_fetch_all($stmt_tasks_result, MYSQLI_ASSOC);
+}
 
 $content = include_template("main.php", [
     "projects"            => $projects,

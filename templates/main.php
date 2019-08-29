@@ -35,25 +35,25 @@
 
         <label class="checkbox">
             <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-            <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php ($show_complete_tasks === 1) ? print("checked") : print(""); ?>>
+            <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks === 1) { print("checked"); } ?>>
             <span class="checkbox__text">Показывать выполненные</span>
         </label>
     </div>
 
     <table class="tasks">
         <?php foreach ($tasks_list as $tasks_list_item) : 
-            if ($tasks_list_item["is_complete"] && ($show_complete_tasks === 0)) { continue; }
+            if (($tasks_list_item["status"] === 1) && ($show_complete_tasks === 0)) { continue; }
         ?>
-        <tr class="tasks__item task <?php if ($tasks_list_item["is_complete"]) { print("task--completed"); } 
-            if (isLessThan24($tasks_list_item["date"])) { print("task--important"); }
+        <tr class="tasks__item task <?php if ($tasks_list_item["status"] === 1) { print("task--completed"); } 
+            if (isLessThan24($tasks_list_item["task_expiration"])) { print("task--important"); }
         ?>">
             <td class="task__select">
                 <label class="checkbox task__checkbox">
                     <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                    <span class="checkbox__text"><?= htmlspecialchars($tasks_list_item["task"]); ?></span>
+                    <span class="checkbox__text"><?= htmlspecialchars($tasks_list_item["task_title"]); ?></span>
                 </label>
             </td>
-            <td class="task__date"><?= htmlspecialchars($tasks_list_item["date"]); ?></td>
+            <td class="task__date"><?= timestampToNormal($tasks_list_item["task_expiration"]); ?></td>
         </tr>
         <?php endforeach; ?>
     </table>
