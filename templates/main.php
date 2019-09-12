@@ -4,9 +4,9 @@
     <nav class="main-navigation">
         <ul class="main-navigation__list">
             <?php foreach ($projects as $project) : ?>
-            <li class="main-navigation__list-item">
-                <a class="main-navigation__list-item-link" href="#"><?= htmlspecialchars($project); ?></a>
-                <span class="main-navigation__list-item-count"><?= getProjectCount($tasks_list, $project); ?></span>
+            <li class="main-navigation__list-item <?php if ($project_id == $project["id"]) { print("main-navigation__list-item--active"); } ?>">
+                <a class="main-navigation__list-item-link" href="/?project_id=<?= $project["id"]; ?>"><?= htmlspecialchars($project["title"]); ?></a>
+                <span class="main-navigation__list-item-count"><?= getProjectCount($tasks_list, $project["title"]); ?></span>
             </li>
             <?php endforeach; ?>
         </ul>
@@ -41,7 +41,7 @@
     </div>
 
     <table class="tasks">
-        <?php foreach ($tasks_list as $tasks_list_item) : 
+        <?php foreach ($param_tasks_list as $tasks_list_item) : 
             if (($tasks_list_item["status"] === 1) && ($show_complete_tasks === 0)) { continue; }
         ?>
         <tr class="tasks__item task <?php if ($tasks_list_item["status"] === 1) { print("task--completed"); } 
