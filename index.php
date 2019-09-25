@@ -10,7 +10,7 @@ $show_complete_tasks = rand(0, 1);
 $title = "Дела в порядке";
 $user_name = "Виталий";
 
-//$user_id and $tasks_list in database.php now
+//$user_id, $projects and $tasks_list in database.php now
 
 $project_id = -1;
 if (isset($_GET["project_id"])) {

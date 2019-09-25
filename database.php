@@ -8,7 +8,7 @@ $projects = [];
 $tasks_list = [];
 
 $connect = mysqli_connect(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-if ($connect == false) {
+if ($connect === false) {
     die("<u><em>Ошибка подключения к базе данных</em></u>");
 } else {
     mysqli_set_charset($connect, "utf8");
