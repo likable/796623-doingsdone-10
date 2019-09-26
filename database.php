@@ -3,7 +3,7 @@
 require_once "config.php";
 require_once "helpers.php";
 
-$user_id = 1;
+$user_id = 2;
 $projects = [];
 $tasks_list = [];
 
@@ -13,7 +13,7 @@ if ($connect === false) {
 } else {
     mysqli_set_charset($connect, "utf8");
     
-    $query_projects = "SELECT id, title FROM projects WHERE author_id = ?";
+    $query_projects = "SELECT id, title FROM projects WHERE author_id = ?;";
     $stmt_projects = db_get_prepare_stmt($connect, $query_projects, [$user_id]);
     mysqli_stmt_execute($stmt_projects);
     $stmt_projects_result = mysqli_stmt_get_result($stmt_projects);
@@ -21,7 +21,7 @@ if ($connect === false) {
     
     $query_tasks = "SELECT status, task_title, file_path, task_expiration, "
         . "title AS category FROM tasks t LEFT JOIN projects p "
-        . "ON project_id = p.id WHERE t.author_id = ?";
+        . "ON project_id = p.id WHERE t.author_id = ? ORDER BY dt_add DESC;";
     $stmt_tasks = db_get_prepare_stmt($connect, $query_tasks, [$user_id]);
     mysqli_stmt_execute($stmt_tasks);
     $stmt_tasks_result = mysqli_stmt_get_result($stmt_tasks);

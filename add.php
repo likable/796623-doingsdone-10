@@ -14,7 +14,7 @@ $user_name = "Виталий";
 $new_task_name = "";
 $new_task_project = "";
 $new_task_project_id = "";
-$new_task_date = "";
+$new_task_date = null;
 
 //Сохранение информации из заполненных полей
 if (!empty($_POST["name"])) {
@@ -27,7 +27,7 @@ if (!empty($_POST["date"])) {
     $new_task_date = htmlspecialchars(trim($_POST["date"]));
 }
 
-$required_fields = ["name", "project", "blabla"];
+$required_fields = ["name", "project"];
 $errors = [];
 
 //Проверка на отправление формы
@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
     
     //Проверка даты, если она введена
-    if ($new_task_date !== "") {
+    if ($new_task_date) {
         //Проверка на соответствие формату, а затем на актуальность
         if (!is_date_valid($new_task_date)) {
             $errors["date"] = "Неправильный формат даты";
@@ -64,59 +64,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (!is_numeric($new_task_project_id) && empty($errors["project"])) {
         $errors["project"] = "Указан несуществующий проект";
     }
-    echo "new_task_project_id = {$new_task_project_id}";
-    
-    //Проверка на соответствие формату ячеек базы данных
-    
-    
-    
-    //Проверка на наличие файла и его размер
 
-    
-    
-
-    
-
-    
-    //валидация
-    //если ошибок нет, перенести файл из временной папки в нормальную
-    //затем добавить информацию в БД
-    //а потом сделать редирект
-    if (count($errors) === 0) {
-        echo "Ошибок нет";
-
-    } else {
-        echo "Дофига ошибок, ты куда смотришь?";
+    //Проверка названия на соответствие формату ячейки базы данных
+    if (strlen($new_task_name) > 127) {
+        $errors["name"] = "Слишком длинное название";
     }
     
+    //Проверка на наличие файла и его размер
+    if (!empty($_FILES["file"]["tmp_name"])) {
+        if ($_FILES["file"]["size"] > 20000000) {
+            $errors["file"] = "Размер файла превышает 20МБ";
+        } elseif (strlen($_FILES["file"]["name"]) > 40) {
+            $errors["file"] = "Имя файла слишком длинное";
+        }
+    }
     
-    
-    
-    
-    echo "<pre>";
-    var_dump($errors);
-    var_dump($projects);
-    echo "</pre>";
-    
+    //валидация
+    if (count($errors) === 0) {
+        //перенос файла из временной папки в постоянную
+        $file_name = null;
+        if (!empty($_FILES["file"]["tmp_name"])) {
+            $file_name = time() . "-" . $_FILES["file"]["name"];
+            $file_new_path = __DIR__ . "/uploads/";
+            move_uploaded_file($_FILES["file"]["tmp_name"], $file_new_path . $file_name);
+        }
 
+        //Добавление в базу
+        $query_new_task = "INSERT INTO tasks (task_title, file_path, "
+                . "task_expiration, author_id, project_id) VALUES "
+                . "(?, ?, ?, ?, ?);";
+        $stmt_new_task = db_get_prepare_stmt($connect, $query_new_task, 
+                [$new_task_name, 
+                 $file_name, 
+                 $new_task_date, 
+                 $user_id, 
+                 $new_task_project_id]);
+        mysqli_stmt_execute($stmt_new_task);
+
+        //редирект на главную
+        header("Location: /index.php");
+    }
 }
 
-//echo "<pre>";
-//var_dump($_SERVER);
-//echo "</pre>";
-
-
-
-
-
-
 $content = include_template("add_tmp.php", [
-    "projects"            => $projects,
-    "tasks_list"          => $tasks_list,
-    "new_task_name"       => $new_task_name,
-    "new_task_project"    => $new_task_project,
-    "new_task_date"       => $new_task_date,
-    "errors"              => $errors
+    "projects"         => $projects,
+    "tasks_list"       => $tasks_list,
+    "new_task_name"    => $new_task_name,
+    "new_task_project" => $new_task_project,
+    "new_task_date"    => $new_task_date,
+    "errors"           => $errors
 ]);
 
 $layout = include_template("layout.php", [

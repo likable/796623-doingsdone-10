@@ -53,6 +53,11 @@
                     <span class="checkbox__text"><?= htmlspecialchars($tasks_list_item["task_title"]); ?></span>
                 </label>
             </td>
+            <td class="task__file">
+                <?php if (isset($tasks_list_item["file_path"])) : ?>
+                <a class="download-link" href="<?= "/uploads/" . $tasks_list_item["file_path"]; ?>"><?= $tasks_list_item["file_path"]; ?></a>
+                <?php endif; ?>
+            </td>
             <td class="task__date"><?= timestampToNormal($tasks_list_item["task_expiration"]); ?></td>
         </tr>
         <?php endforeach; ?>

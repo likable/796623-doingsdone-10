@@ -36,7 +36,8 @@ if ($project_id === -1) {
 } else {
     $query_param = "SELECT status, task_title, file_path, task_expiration, "
         . "title AS category FROM tasks t LEFT JOIN projects p "
-        . "ON project_id = p.id WHERE t.author_id = ? AND project_id = ?";
+        . "ON project_id = p.id WHERE t.author_id = ? AND project_id = ? "
+        . "ORDER BY dt_add DESC;";
     $stmt_param = db_get_prepare_stmt($connect, $query_param, 
             [$user_id, $project_id]);
     mysqli_stmt_execute($stmt_param);
