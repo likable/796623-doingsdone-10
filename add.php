@@ -35,8 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     //Проверка на заполненность обязательных полей
     foreach ($required_fields as $required_field) {
-        if (empty($_POST[$required_field]) || 
-                empty(trim($_POST[$required_field]))) {
+        if (empty(trim($_POST[$required_field]))) {
             $errors[$required_field] = "Поле обязательно для заполнения";
         }  
     }
@@ -86,7 +85,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if (!empty($_FILES["file"]["tmp_name"])) {
             $file_name = time() . "-" . $_FILES["file"]["name"];
             $file_new_path = __DIR__ . "/uploads/";
-            move_uploaded_file($_FILES["file"]["tmp_name"], $file_new_path . $file_name);
+            move_uploaded_file($_FILES["file"]["tmp_name"], 
+                    $file_new_path . $file_name);
         }
 
         //Добавление в базу
