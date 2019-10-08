@@ -4,14 +4,23 @@ require_once "config.php";
 require_once "helpers.php";
 require_once "database.php";
 
+if(session_id() == '') {
+    session_start();
+}
+$user_id = $_SESSION["user_id"] ?? "";
+$user_name = $_SESSION["user_name"] ?? "";
+
+//залогиненный пользователь не должен видеть эту страницу
+if (!empty($user_id)) {
+    header("Location: /");
+    exit;
+}
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
+//$projects and $tasks_list are in database.php
 $title = "Вход";
-$user_name = "no name";
-$user = [];
-
-//$user_id, $projects and $tasks_list in database.php now
 
 $email = "";
 $password = "";
@@ -25,6 +34,7 @@ if (!empty($_POST["password"])) {
 
 $required_fields = ["email", "password"];
 $errors = [];
+$user = [];
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     //проверка email на формат
@@ -61,7 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     
     //вход на сайт
     if (count($errors) === 0) {
-        session_start();
+        if (session_id() == '') {
+            session_start();
+        }
         $_SESSION["user_id"] = $user["id"];
         $_SESSION["user_name"] = $user["name"];
         header("Location: /index.php");
