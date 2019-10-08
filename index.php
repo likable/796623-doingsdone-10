@@ -23,6 +23,7 @@ if (empty($user_id)) {
     
 } else {
     
+    //работа с авторизованным пользователем
     $project_id = -1;
     if (isset($_GET["project_id"])) {
         $project_id = $_GET["project_id"];
@@ -49,6 +50,9 @@ if (empty($user_id)) {
         die();
     }
 
+    $param_tasks_list = [];
+    
+    //показ записей из выбранного проекта
     if ($project_id === -1) {
         $param_tasks_list = $tasks_list;
     } else {
@@ -68,7 +72,30 @@ if (empty($user_id)) {
             die();
         }
     }
-
+    
+    //проверка поискового запроса
+    $get_search = $_GET["search"] ?? "";
+    $search = trim($get_search);
+    
+    if (!empty($search)) {
+        $query_search = "SELECT status, task_title, file_path, "
+            . "task_expiration FROM tasks "
+            . "WHERE MATCH(task_title) AGAINST(?) AND author_id = ? "
+            . "ORDER BY dt_add DESC;";
+        $stmt_search = db_get_prepare_stmt($connect, $query_search, 
+                [$search, $user_id]);
+        mysqli_stmt_execute($stmt_search);
+        $stmt_search_result = mysqli_stmt_get_result($stmt_search);
+        $search_result = mysqli_fetch_all($stmt_search_result, MYSQLI_ASSOC);
+        $search_count = mysqli_num_rows($stmt_search_result);
+        
+        if ($search_count > 0) {
+            $param_tasks_list = $search_result;
+        } else {
+            $param_tasks_list = "nothing";
+        }
+    } 
+    
     $content = include_template("main.php", [
         "projects"            => $projects,
         "show_complete_tasks" => $show_complete_tasks,
@@ -76,7 +103,6 @@ if (empty($user_id)) {
         "param_tasks_list"    => $param_tasks_list,
         "project_id"          => $project_id
     ]);
-    
 }
 
 $layout = include_template("layout.php", [
