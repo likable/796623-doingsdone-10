@@ -4,19 +4,23 @@ require_once "config.php";
 require_once "helpers.php";
 require_once "database.php";
 
+if(session_id() == '') {
+    session_start();
+}
+$user_id = $_SESSION["user_id"] ?? "";
+$user_name = $_SESSION["user_name"] ?? "";
+
+//залогиненный пользователь не должен видеть эту страницу
+if (!empty($user_id)) {
+    header("Location: /");
+    exit;
+}
+
 // показывать или нет выполненные задачи
 $show_complete_tasks = rand(0, 1);
 
-//$user_id, $projects and $tasks_list in database.php now
+//$projects and $tasks_list are in database.php
 $title = "Регистрация";
-$user_name = "Виталий";
-
-/******************************************************************
- * 
- * Внимание, для незалогиненого пользователя недолжно быть кнопки
- * "Добавить задачу" в правом верхнем углу
- * 
- ******************************************************************/
 
 $new_user_email = "";
 $new_user_password = "";
