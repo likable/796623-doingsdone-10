@@ -16,9 +16,6 @@ if (empty($user_id)) {
     exit;
 }
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
 //$projects and $tasks_list are in database.php
 $title = "Добавление задачи";
 
@@ -59,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         //Проверка на соответствие формату, а затем на актуальность
         if (!is_date_valid($new_task_date)) {
             $errors["date"] = "Неправильный формат даты";
-        } elseif (strtotime($new_task_date) < time()) {
+        } elseif (strtotime($new_task_date) < strtotime(date("Y-m-d"))) {
             $errors["date"] = "Нельзя указывать дату из прошлого";
         }
     }
