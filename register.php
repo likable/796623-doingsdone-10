@@ -16,9 +16,6 @@ if (!empty($user_id)) {
     exit;
 }
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
-
 //$projects and $tasks_list are in database.php
 $title = "Регистрация";
 

@@ -9,9 +9,17 @@ if(session_id() == '') {
 }
 $user_id = $_SESSION["user_id"] ?? "";
 $user_name = $_SESSION["user_name"] ?? "";
+$show_complete_tasks = $_SESSION["show_complete_tasks"] ?? 0;
 
-// показывать или нет выполненные задачи
-$show_complete_tasks = rand(0, 1);
+//смена видимости выполненных задач
+if (!empty($_GET["show_complete_tasks"])) {
+    if ($show_complete_tasks === 0) {
+        $_SESSION["show_complete_tasks"] = 1;
+    } else {
+        $_SESSION["show_complete_tasks"] = 0;
+    }
+    header("Location: /index.php");
+}
 
 //$projects and $tasks_list are in database.php
 $title = "Дела в порядке";
@@ -22,8 +30,8 @@ if (empty($user_id)) {
     $content = include_template("guest_tmp.php", []);
     
 } else {
-    
     //работа с авторизованным пользователем
+    
     $project_id = -1;
     if (isset($_GET["project_id"])) {
         $project_id = $_GET["project_id"];
@@ -57,8 +65,9 @@ if (empty($user_id)) {
         $param_tasks_list = $tasks_list;
     } else {
         $query_param = "SELECT status, task_title, file_path, task_expiration, "
-            . "title AS category FROM tasks t LEFT JOIN projects p "
-            . "ON project_id = p.id WHERE t.author_id = ? AND project_id = ? "
+            . "title AS category, t.id AS tid FROM tasks t "
+            . "LEFT JOIN projects p ON project_id = p.id "
+            . "WHERE t.author_id = ? AND project_id = ? "
             . "ORDER BY dt_add DESC;";
         $stmt_param = db_get_prepare_stmt($connect, $query_param, 
                 [$user_id, $project_id]);
@@ -94,7 +103,42 @@ if (empty($user_id)) {
         } else {
             $param_tasks_list = "nothing";
         }
-    } 
+    }
+    
+    //смена статуса задачи
+    
+    $task_id_for_change_status = $_GET["task_id_for_change_status"] ?? -1;
+
+    //проверка на принадлежность задачи пользователю
+    $is_users_task = false;
+    $last_status = -1;
+    $new_status = -1;
+    
+    foreach ($tasks_list as $tasks_list_item) {
+        if ($tasks_list_item["tid"] == $task_id_for_change_status) {
+            $is_users_task = true;
+            $last_status = $tasks_list_item["status"];
+            break;
+        }
+    }
+    
+    //запрос на изменение статуса
+    if ($task_id_for_change_status !== -1 && $is_users_task) {
+        //новое значение статуса
+        if ($last_status === 1) {
+            $new_status = 0;
+        } else {
+            $new_status = 1;
+        }
+        
+        $query_status = "UPDATE tasks SET status = ? WHERE id = ?;";
+        $stmt_status = db_get_prepare_stmt($connect, $query_status, 
+                [$new_status, $task_id_for_change_status]);
+        mysqli_stmt_execute($stmt_status);
+        
+        //обновление страницы для отображения изменений
+        header("Location: /index.php");
+    }
     
     $content = include_template("main.php", [
         "projects"            => $projects,

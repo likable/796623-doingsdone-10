@@ -26,8 +26,8 @@ if ($connect === false) {
         $projects = mysqli_fetch_all($stmt_projects_result, MYSQLI_ASSOC);
 
         $query_tasks = "SELECT status, task_title, file_path, task_expiration, "
-            . "title AS category FROM tasks t LEFT JOIN projects p "
-            . "ON project_id = p.id WHERE t.author_id = ? "
+            . "title AS category, t.id AS tid FROM tasks t "
+            . "LEFT JOIN projects p ON project_id = p.id WHERE t.author_id = ? "
             . "ORDER BY dt_add DESC;";
         $stmt_tasks = db_get_prepare_stmt($connect, $query_tasks, [$user_id]);
         mysqli_stmt_execute($stmt_tasks);

@@ -35,7 +35,7 @@
         <label class="checkbox">
             <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
             <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks === 1) { print("checked"); } ?>>
-            <span class="checkbox__text">Показывать выполненные</span>
+            <span class="checkbox__text"><a href="/?show_complete_tasks=toggle" style="color:#31313a;">Показывать выполненные</a></span>
         </label>
     </div>
     
@@ -50,12 +50,12 @@
                 if (($tasks_list_item["status"] === 1) && ($show_complete_tasks === 0)) { continue; }
             ?>
             <tr class="tasks__item task <?php if ($tasks_list_item["status"] === 1) { print("task--completed"); } 
-                if (isLessThan24($tasks_list_item["task_expiration"])) { print("task--important"); }
+                if (isLessThan24($tasks_list_item["task_expiration"])) { print(" task--important"); }
             ?>">
                 <td class="task__select">
                     <label class="checkbox task__checkbox">
-                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1">
-                        <span class="checkbox__text"><?= htmlspecialchars($tasks_list_item["task_title"]); ?></span>
+                        <input class="checkbox__input visually-hidden task__checkbox" type="checkbox" value="1" <?php if ($tasks_list_item["status"] === 1) { print("checked"); } ?>>
+                        <span class="checkbox__text"><a href="/?task_id_for_change_status=<?= $tasks_list_item["tid"]; ?>" style="color:#31313a;"><?= htmlspecialchars($tasks_list_item["task_title"]); ?></a></span>
                     </label>
                 </td>
                 <td class="task__file">
