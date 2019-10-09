@@ -2,6 +2,7 @@
 
 require_once "config.php";
 require_once "helpers.php";
+require_once "vendor/autoload.php";
 
 if(session_id() == '') {
     session_start();
