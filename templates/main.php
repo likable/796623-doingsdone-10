@@ -26,10 +26,10 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/" class="tasks-switch__item tasks-switch__item--active">Все задачи</a>
-            <a href="/" class="tasks-switch__item">Повестка дня</a>
-            <a href="/" class="tasks-switch__item">Завтра</a>
-            <a href="/" class="tasks-switch__item">Просроченные</a>
+            <a href="/?tasks_switch_mode=all" class="tasks-switch__item <?php if ($tasks_switch_mode == "all") { print(" tasks-switch__item--active"); } ?>">Все задачи</a>
+            <a href="/?tasks_switch_mode=today" class="tasks-switch__item <?php if ($tasks_switch_mode == "today") { print(" tasks-switch__item--active"); } ?>">Повестка дня</a>
+            <a href="/?tasks_switch_mode=tomorrow" class="tasks-switch__item <?php if ($tasks_switch_mode == "tomorrow") { print(" tasks-switch__item--active"); } ?>">Завтра</a>
+            <a href="/?tasks_switch_mode=expired" class="tasks-switch__item <?php if ($tasks_switch_mode == "expired") { print(" tasks-switch__item--active"); } ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">
@@ -39,7 +39,7 @@
         </label>
     </div>
     
-    <?php if ($param_tasks_list == "nothing") : ?>
+    <?php if (count($param_tasks_list) === 0) : ?>
     
         <p>Ничего не найдено по вашему запросу</p>
         

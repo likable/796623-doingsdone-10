@@ -95,18 +95,39 @@ if (empty($user_id)) {
                 [$search, $user_id]);
         mysqli_stmt_execute($stmt_search);
         $stmt_search_result = mysqli_stmt_get_result($stmt_search);
-        $search_result = mysqli_fetch_all($stmt_search_result, MYSQLI_ASSOC);
-        $search_count = mysqli_num_rows($stmt_search_result);
-        
-        if ($search_count > 0) {
-            $param_tasks_list = $search_result;
-        } else {
-            $param_tasks_list = "nothing";
-        }
+        $param_tasks_list = mysqli_fetch_all($stmt_search_result, MYSQLI_ASSOC);
     }
     
-    //смена статуса задачи
+    //фильтрация задач
+    $filtred_tasks_list = [];
     
+    $tasks_switch_mode = $_GET["tasks_switch_mode"] ?? false;
+    if ($tasks_switch_mode) {
+        $_SESSION["tasks_switch_mode"] = $tasks_switch_mode;
+    }
+    $tasks_switch_mode = $_SESSION["tasks_switch_mode"] ?? "all";
+    
+    foreach ($param_tasks_list as $param_task) {
+        $task_time = strtotime($param_task["task_expiration"]);
+        $task_day = date("Y-m-d", $task_time);
+        $today = date("Y-m-d");
+        $tomorrow = date("Y-m-d", time() + 86400);
+        
+        if ($tasks_switch_mode == "today" && $task_day == $today) {
+            $filtred_tasks_list[] = $param_task;
+        } elseif ($tasks_switch_mode == "tomorrow" && $task_day == $tomorrow) {
+            $filtred_tasks_list[] = $param_task;
+        } elseif ($tasks_switch_mode == "expired" && 
+                $task_time < strtotime($today) && $task_time > 1) {
+            $filtred_tasks_list[] = $param_task;
+        } elseif ($tasks_switch_mode == "all") {
+            $filtred_tasks_list[] = $param_task;
+        }
+    }
+
+    $param_tasks_list = $filtred_tasks_list;
+    
+    //смена статуса задачи
     $task_id_for_change_status = $_GET["task_id_for_change_status"] ?? -1;
 
     //проверка на принадлежность задачи пользователю
@@ -145,7 +166,8 @@ if (empty($user_id)) {
         "show_complete_tasks" => $show_complete_tasks,
         "tasks_list"          => $tasks_list,
         "param_tasks_list"    => $param_tasks_list,
-        "project_id"          => $project_id
+        "project_id"          => $project_id,
+        "tasks_switch_mode"   => $tasks_switch_mode
     ]);
 }
 
