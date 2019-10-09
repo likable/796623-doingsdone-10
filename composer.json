@@ -1,0 +1,15 @@
+{
+    "name": "went/doingsdone",
+    "description": "\"task manager\"",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Виталий",
+            "email": "wental-@mail.ru"
+        }
+    ],
+    "require": {
+        "swiftmailer/swiftmailer": "^6.2"
+    }
+}
