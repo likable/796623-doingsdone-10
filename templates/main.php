@@ -1,19 +1,5 @@
-<section class="content__side">
-    <h2 class="content__side-heading">Проекты</h2>
 
-    <nav class="main-navigation">
-        <ul class="main-navigation__list">
-            <?php foreach ($projects as $project) : ?>
-            <li class="main-navigation__list-item <?php if ($project_id == $project["id"]) { print("main-navigation__list-item--active"); } ?>">
-                <a class="main-navigation__list-item-link" href="/?project_id=<?= $project["id"]; ?>"><?= htmlspecialchars($project["title"]); ?></a>
-                <span class="main-navigation__list-item-count"><?= getProjectCount($tasks_list, $project["title"]); ?></span>
-            </li>
-            <?php endforeach; ?>
-        </ul>
-    </nav>
-
-    <a class="button button--transparent button--plus content__side-button" href="/project.php" target="project_add">Добавить проект</a>
-</section>
+<?= $section; ?>
 
 <main class="content__main">
     <h2 class="content__main-heading">Список задач</h2>
@@ -26,10 +12,10 @@
 
     <div class="tasks-controls">
         <nav class="tasks-switch">
-            <a href="/?tasks_switch_mode=all" class="tasks-switch__item <?php if ($tasks_switch_mode == "all") { print(" tasks-switch__item--active"); } ?>">Все задачи</a>
-            <a href="/?tasks_switch_mode=today" class="tasks-switch__item <?php if ($tasks_switch_mode == "today") { print(" tasks-switch__item--active"); } ?>">Повестка дня</a>
-            <a href="/?tasks_switch_mode=tomorrow" class="tasks-switch__item <?php if ($tasks_switch_mode == "tomorrow") { print(" tasks-switch__item--active"); } ?>">Завтра</a>
-            <a href="/?tasks_switch_mode=expired" class="tasks-switch__item <?php if ($tasks_switch_mode == "expired") { print(" tasks-switch__item--active"); } ?>">Просроченные</a>
+            <a href="/?tasks_switch_mode=all" class="tasks-switch__item <?php if ($tasks_switch_mode === "all") { print(" tasks-switch__item--active"); } ?>">Все задачи</a>
+            <a href="/?tasks_switch_mode=today" class="tasks-switch__item <?php if ($tasks_switch_mode === "today") { print(" tasks-switch__item--active"); } ?>">Повестка дня</a>
+            <a href="/?tasks_switch_mode=tomorrow" class="tasks-switch__item <?php if ($tasks_switch_mode === "tomorrow") { print(" tasks-switch__item--active"); } ?>">Завтра</a>
+            <a href="/?tasks_switch_mode=expired" class="tasks-switch__item <?php if ($tasks_switch_mode === "expired") { print(" tasks-switch__item--active"); } ?>">Просроченные</a>
         </nav>
 
         <label class="checkbox">

@@ -1,9 +1,6 @@
 <?php
 
-require_once "config.php";
-require_once "helpers.php";
 require_once "database.php";
-require_once "vendor/autoload.php";
 
 //Поиск истекающих заданий
 $query_tasks = "SELECT task_title, task_expiration, email, name FROM tasks "

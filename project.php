@@ -1,15 +1,8 @@
 <?php
 
-require_once "config.php";
-require_once "helpers.php";
 require_once "database.php";
-require_once "vendor/autoload.php";
 
-if(session_id() == '') {
-    session_start();
-}
-$user_id = $_SESSION["user_id"] ?? "";
-$user_name = $_SESSION["user_name"] ?? "";
+//$user_id, $user_name, $projects and $tasks_list are in database.php
 
 //незалогиненный пользователь не должен видеть эту страницу
 if (empty($user_id)) {
@@ -17,7 +10,6 @@ if (empty($user_id)) {
     exit;
 }
 
-//$projects and $tasks_list are in database.php
 $title = "Добавление проекта";
 
 $new_project_name = "";
@@ -70,9 +62,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 
+$section = include_template("section.php", [
+    "projects"   => $projects,
+    "tasks_list" => $tasks_list,
+    "project_id" => -1
+]);
+
 $content = include_template("project_tmp.php", [
-    "projects"         => $projects,
-    "tasks_list"       => $tasks_list,
+    "section"          => $section,
     "new_project_name" => $new_project_name,
     "errors"           => $errors
 ]);

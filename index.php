@@ -1,15 +1,7 @@
 <?php
 
-require_once "config.php";
-require_once "helpers.php";
 require_once "database.php";
-require_once "vendor/autoload.php";
 
-if(session_id() == '') {
-    session_start();
-}
-$user_id = $_SESSION["user_id"] ?? "";
-$user_name = $_SESSION["user_name"] ?? "";
 $show_complete_tasks = $_SESSION["show_complete_tasks"] ?? 0;
 
 //смена видимости выполненных задач
@@ -22,7 +14,7 @@ if (!empty($_GET["show_complete_tasks"])) {
     header("Location: /index.php");
 }
 
-//$projects and $tasks_list are in database.php
+//$user_id, $user_name, $projects and $tasks_list are in database.php
 $title = "Дела в порядке";
 
 //проверка анонимности пользователя
@@ -114,14 +106,16 @@ if (empty($user_id)) {
         $today = date("Y-m-d");
         $tomorrow = date("Y-m-d", time() + 86400);
         
-        if ($tasks_switch_mode == "today" && $task_day == $today) {
+        if ($tasks_switch_mode === "today" && 
+                $task_day === $today) {
             $filtred_tasks_list[] = $param_task;
-        } elseif ($tasks_switch_mode == "tomorrow" && $task_day == $tomorrow) {
+        } elseif ($tasks_switch_mode === "tomorrow" && 
+                $task_day === $tomorrow) {
             $filtred_tasks_list[] = $param_task;
-        } elseif ($tasks_switch_mode == "expired" && 
+        } elseif ($tasks_switch_mode === "expired" && 
                 $task_time < strtotime($today) && $task_time > 1) {
             $filtred_tasks_list[] = $param_task;
-        } elseif ($tasks_switch_mode == "all") {
+        } elseif ($tasks_switch_mode === "all") {
             $filtred_tasks_list[] = $param_task;
         }
     }
@@ -162,12 +156,16 @@ if (empty($user_id)) {
         header("Location: /index.php");
     }
     
+    $section = include_template("section.php", [
+        "projects"   => $projects,
+        "tasks_list" => $tasks_list,
+        "project_id" => $project_id
+    ]);
+    
     $content = include_template("main.php", [
-        "projects"            => $projects,
+        "section"             => $section,
         "show_complete_tasks" => $show_complete_tasks,
-        "tasks_list"          => $tasks_list,
         "param_tasks_list"    => $param_tasks_list,
-        "project_id"          => $project_id,
         "tasks_switch_mode"   => $tasks_switch_mode
     ]);
 }

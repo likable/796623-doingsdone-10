@@ -11,7 +11,7 @@
     <div class="form__row">
       <label class="form__label" for="email">E-mail <sup>*</sup></label>
 
-      <input class="form__input <?php if ($errors["email"]) { print("form__input--error"); } ?>" type="text" name="email" id="email" value="<?= $email; ?>" placeholder="Введите e-mail">
+      <input class="form__input <?php if (isset($errors["email"])) { print("form__input--error"); } ?>" type="text" name="email" id="email" value="<?= $email; ?>" placeholder="Введите e-mail">
 
       <?php if (array_key_exists("email", $errors)) : ?>
       <p class="form__message"><?= $errors["email"]; ?></p>
@@ -21,7 +21,7 @@
     <div class="form__row">
       <label class="form__label" for="password">Пароль <sup>*</sup></label>
 
-      <input class="form__input <?php if ($errors["password"]) { print("form__input--error"); } ?>" type="password" name="password" id="password" value="<?= $password; ?>" placeholder="Введите пароль">
+      <input class="form__input <?php if (isset($errors["password"])) { print("form__input--error"); } ?>" type="password" name="password" id="password" value="<?= $password; ?>" placeholder="Введите пароль">
       
       <?php if (array_key_exists("password", $errors)) : ?>
       <p class="form__message"><?= $errors["password"]; ?></p>

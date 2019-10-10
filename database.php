@@ -4,10 +4,11 @@ require_once "config.php";
 require_once "helpers.php";
 require_once "vendor/autoload.php";
 
-if(session_id() == '') {
+if(session_id() === '') {
     session_start();
 }
 $user_id = $_SESSION["user_id"] ?? "";
+$user_name = $_SESSION["user_name"] ?? "";
 
 $projects = [];
 $tasks_list = [];
