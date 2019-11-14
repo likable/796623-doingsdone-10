@@ -20,8 +20,10 @@
 
         <label class="checkbox">
             <!--добавить сюда атрибут "checked", если переменная $show_complete_tasks равна единице-->
-            <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks === 1) { print("checked"); } ?>>
-            <span class="checkbox__text"><a href="/?show_complete_tasks=toggle" style="color:#31313a;">Показывать выполненные</a></span>
+            <a href="/?show_complete_tasks=toggle">
+                <input class="checkbox__input visually-hidden show_completed" type="checkbox" <?php if ($show_complete_tasks === 1) { print("checked"); } ?>>
+                <span class="checkbox__text" style="color:#31313a;">Показывать выполненные</span>
+            </a>
         </label>
     </div>
     

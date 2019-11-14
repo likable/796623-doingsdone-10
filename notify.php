@@ -29,6 +29,8 @@ foreach ($unique_emails as $email) {
     }
 }
 
+//SMTP-данные устарели, в связи этим отправка писем отключена
+/*
 //отправка писем
 foreach ($email_grouped_tasks as $user_mail => $data) {
     $tasks_string = implode(", ", $data["tasks"]);
@@ -55,3 +57,4 @@ foreach ($email_grouped_tasks as $user_mail => $data) {
     $mailer = new Swift_Mailer($transport);
     $mailer->send($message);
 }
+*/
